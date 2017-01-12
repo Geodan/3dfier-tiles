@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/Geodan/3dfier-tiles/issues"
   },
-  "homepage": "https://github.com/Geodan/3dfier-tiles#readme"
+  "homepage": "https://github.com/Geodan/3dfier-tiles#readme",
+  "dependencies": {
+    "3d-tiles-tools": "^0.1.0",
+    "obj2gltf": "^0.1.7"
+  }
 }
