@@ -1,0 +1,24 @@
+{
+  "name": "3dfier-tiles",
+  "version": "0.0.1",
+  "description": "Scripts to generate 3d tiles with 3dfier",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Geodan/3dfier-tiles.git"
+  },
+  "keywords": [
+    "3dfier",
+    "3d-tiles",
+    "cesium"
+  ],
+  "author": "Tom van Tilburg & Rubio Vaughan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Geodan/3dfier-tiles/issues"
+  },
+  "homepage": "https://github.com/Geodan/3dfier-tiles#readme"
+}
