@@ -10,7 +10,7 @@ export default function(config) {
 		  hideEchoBack: true // The typed text on screen is hidden by `*` (default). 
 		});
 		
-		client.scp('./data/*.*', user+':'+pass+'@192.168.40.2:/var/data/sites/cesium/b3dm_test/', function(err) {
+		client.scp('./data/tileset.json', user+':'+pass+'@192.168.40.2:/var/data/sites/cesium/b3dm_test/', function(err) {
 			if (!err){
 				resolve();
 			}

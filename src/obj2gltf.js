@@ -5,7 +5,7 @@ export default function(config) {
 		console.log('Obj2gltf NEW');
 		var obj2gltf = require('obj2gltf');
 		var convert = obj2gltf.convert;
-		var outGltf = './data/outfile.gltf';
+		var outGltf = config.outfile;
 		var options = {
 				binary: true,
 				optimizeForCesium: true,
