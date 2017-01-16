@@ -32,7 +32,7 @@ PDALEXT="PC_Intersects(pa,ST_MakeEnvelope($MINX,$MINY,$MAXX,$MAXY,28992))"
 PDALOUT="$WORKDIR/pointcloud.las"
 echo -n "Extracting pointcloud..."
 $PDAL pipeline --readers.pgpointcloud.where="$PDALEXT" --writers.las.filename="$PDALOUT" $PDALOPT
-echo "done"
+#echo "done"
 
 cd $WORKDIR
 
@@ -60,10 +60,12 @@ $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -
 	-f sqlite bgt_tunneldeel.sqlite PG:"${PGPARAM}" bgt.tunneldeel_2d
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
 	-f sqlite bgt_kunstwerkdeel.sqlite PG:"${PGPARAM}" bgt.kunstwerkdeel_2d
-echo "done"
+#echo "done"
 
 echo -n "Running 3dfier..."
 $THREEDFIER $THREEDCONF > $MODELDIR/$TILENAME.obj
+echo -n "Removing tmp files"
+rm -r $WORKDIR
 echo "done"
 
 #EXTENT="121000 486600 122000 487400" # centrum_small.laz 
