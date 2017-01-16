@@ -196,7 +196,7 @@ var createTileset = function(config) {
 							0,100
 						]
 					},
-					geometricError: 1200,
+					geometricError: 120,
 					content: {
 					  url: bbox[0]+"-"+bbox[1]+"-"+bbox[2]+"-"+bbox[3]+".b3dm"
 					},

@@ -8,7 +8,7 @@ export default function(bbox, tilesize) {
 	var tiles = [];
 	return new Promise(function(resolve, reject){
 		for (let i=0; i<ntilesx; i++){
-			for (let j=0; j<ntilesx; j++){
+			for (let j=0; j<ntilesy; j++){
 				var tile = [
 					bbox[0] + (tilesize * i),
 					bbox[1] + (tilesize * j),

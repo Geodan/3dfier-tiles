@@ -29,4 +29,6 @@ process.on('message', function(m) {
 		}).then(d=>{
 			process.send('complete');
 		});
+		
+	//process.send('complete');
 });

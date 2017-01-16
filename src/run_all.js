@@ -21,7 +21,7 @@ var cc = new computecluster({
 });
 
 
-tool.splitTiles([xmin, ymin, xmax, ymax],500).then(function(tiles){
+tool.splitTiles([xmin, ymin, xmax, ymax],300).then(function(tiles){
 	var toRun = tiles.length;
 	console.log('Exporting ' + tiles.length + ' tiles');
 	for (var i = 0; i < tiles.length; i++) {
