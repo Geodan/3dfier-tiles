@@ -1,8 +1,8 @@
 #!/bin/bash
 
 PGPARAM="dbname=research user=postgres password="
-BASEDIR="/home/tomt/scripts/3dfier/3dfier_files"
-MODELDIR="$BASEDIR/models"
+BASEDIR="/var/data/git_repos/3dfier-tiles/"
+MODELDIR="$BASEDIR/data/models"
 OGR2OGR="/usr/local/bin/ogr2ogr"
 PDAL="/usr/local/bin/pdal"
 PDALOPT="$BASEDIR/conf/pdal_options.json"
@@ -15,7 +15,7 @@ if ! [[ $EXTENT =~ ^[0-9]+[[:space:]][0-9]+[[:space:]][0-9]+[[:space:]][0-9]+$ ]
 	exit 1
 fi
 TILENAME="$1-$2-$3-$4"
-WORKDIR="$BASEDIR/$TILENAME"
+WORKDIR="/tmp/$TILENAME"
 if ! [[ -e $WORKDIR ]]; then
 	mkdir -p $WORKDIR
 fi

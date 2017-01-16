@@ -1,0 +1,15 @@
+{
+	"pipeline":[
+		{
+			"type":"readers.pgpointcloud",
+			"connection":"dbname='research' user='postgres'",
+			"schema":"ahn3_pointcloud",
+			"table":"vw_ahn3",
+			"column":"pa",
+			"spatialreference":"EPSG:28992"
+		},
+		{
+			"type":"writers.las"
+		}
+	]
+}

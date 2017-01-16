@@ -1,16 +1,52 @@
 Geodan 2017
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('bluebird'), require('readline'), require('fs'), require('obj2gltf'), require('3d-tiles-tools/lib/glbToB3dm'), require('fs-extra'), require('readline-sync'), require('scp2')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'bluebird', 'readline', 'fs', 'obj2gltf', '3d-tiles-tools/lib/glbToB3dm', 'fs-extra', 'readline-sync', 'scp2'], factory) :
-	(factory((global.tiler = global.tiler || {}),global.bluebird,global.readline,global.fs,global.obj2gltf,global.glbToB3dm,global.fsExtra,global.readlineSync,global.client));
-}(this, (function (exports,bluebird,readline,fs,obj2gltf,glbToB3dm,fsExtra,readlineSync,client) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('fs'), require('child_process'), require('bluebird'), require('readline'), require('obj2gltf'), require('3d-tiles-tools/lib/glbToB3dm'), require('fs-extra'), require('readline-sync'), require('scp2'), require('cesium'), require('proj4')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'fs', 'child_process', 'bluebird', 'readline', 'obj2gltf', '3d-tiles-tools/lib/glbToB3dm', 'fs-extra', 'readline-sync', 'scp2', 'cesium', 'proj4'], factory) :
+	(factory((global.tiler = global.tiler || {}),global.fs,global.child_process,global.bluebird,global.readline,global.obj2gltf,global.glbToB3dm,global.fsExtra,global.readlineSync,global.client,global.Cesium,global.proj4));
+}(this, (function (exports,fs,child_process,bluebird,readline,obj2gltf,glbToB3dm,fsExtra,readlineSync,client,Cesium,proj4) { 'use strict';
 
-readline = 'default' in readline ? readline['default'] : readline;
 fs = 'default' in fs ? fs['default'] : fs;
+readline = 'default' in readline ? readline['default'] : readline;
 glbToB3dm = 'default' in glbToB3dm ? glbToB3dm['default'] : glbToB3dm;
 fsExtra = 'default' in fsExtra ? fsExtra['default'] : fsExtra;
 readlineSync = 'default' in readlineSync ? readlineSync['default'] : readlineSync;
 client = 'default' in client ? client['default'] : client;
+Cesium = 'default' in Cesium ? Cesium['default'] : Cesium;
+proj4 = 'default' in proj4 ? proj4['default'] : proj4;
+
+var export2obj = function(config) {
+	return new Promise(function(resolve, reject){
+		console.log('Exporting data to obj file');
+		
+		var command = './src/run3dfier.sh '+config.xmin+' '+config.ymin+' '+config.xmax+' '+config.ymax;
+		var child = child_process.exec(command, function(err, stdout, stderr){
+			if(err != null){
+				reject(err);
+				//return cb(new Error(err), null);
+			}else if(typeof(stderr) != "string"){
+				reject(stderr);
+				//return cb(new Error(stderr), null);
+			}else{
+				resolve();
+				//return cb(null, stdout);
+			}
+		});
+		//console.log(child);
+		child.on('close', function(code) {
+		  console.log('run3dfier ended with: ' + code);
+		  resolve();
+		});
+		child.on('error', function(err) {
+		  console.log('run3dfier errd with: ' + err);
+		  reject(err);
+		});
+		child.stdout.on('data', function(d) {
+		  console.log('run3dfier: ' + d);
+	   });
+		
+		
+	});
+};
 
 var offsetObj = function(config) {
 	var infile = config.infile;
@@ -82,7 +118,6 @@ var glb2b3dm = function(config) {
 
 var scopy = function(config) {
 	var user = config.user;
-	var pass = config.pass;
 	return new Promise(function(resolve, reject){
 		console.log('Copy to webserver (/var/data/sites/cesium/b3dm_test/) NEW');
 
@@ -102,10 +137,62 @@ var scopy = function(config) {
 	});
 };
 
+var createTileset = function(config) {
+	return new Promise(function(resolve, reject){
+		console.log('Creating tileset.json NEW');
+		fs.readFile('./src/tileset_template.json',function (err,doc){
+			if (err) return console.error(err);
+			var template = JSON.parse(doc);
+			
+			//Get lat lon
+			var RD = "+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.999908 +x_0=155000 +y_0=463000 +ellps=bessel +units=m +towgs84=565.2369,50.0087,465.658,-0.406857330322398,0.350732676542563,-1.8703473836068,4.0812 +no_defs +no_defs";
+			var lowerleft = proj4(RD,'WGS84',[config.xmin,config.ymin]);
+			var upperright = proj4(RD,'WGS84',[config.xmax,config.ymax]);
+			
+			//1.get modelmatrix 
+			var m = Cesium.Transforms.eastNorthUpToFixedFrame(
+				Cesium.Cartesian3.fromDegrees(lowerleft[0],lowerleft[1], 0.0));
+			template.root.children[0].transform = [
+				m[0],
+				m[1],
+				m[2],
+				m[3],
+				m[4],
+				m[5],
+				m[6],
+				m[7],
+				m[8],
+				m[9],
+				m[10],
+				m[11],
+				m[12],
+				m[13],
+				m[14],
+				m[15]
+			];
+			
+			//set region
+			template.root.children[0].boundingVolume.region = [
+				lowerleft[0],lowerleft[1],
+				upperright[0],upperright[1],
+				0,100
+			];
+			
+			
+			fs.writeFile('tileset_new.json', JSON.stringify(template), function (err) {
+			  if (err) return console.error(err);
+			  resolve();
+			});
+		});
+	});
+};
+
+exports.export2obj = export2obj;
 exports.offsetObj = offsetObj;
 exports.obj2gltf = obj2gltf$1;
 exports.glb2b3dm = glb2b3dm;
 exports.scopy = scopy;
+exports.createTileset = createTileset;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 

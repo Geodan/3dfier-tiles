@@ -3,7 +3,6 @@ import client from 'scp2';
 
 export default function(config) {
 	var user = config.user;
-	var pass = config.pass;
 	return new Promise(function(resolve, reject){
 		console.log('Copy to webserver (/var/data/sites/cesium/b3dm_test/) NEW');
 
