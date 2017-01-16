@@ -3,71 +3,57 @@ var
 	ymin = parseInt(process.argv[3]),
 	xmax = parseInt(process.argv[4]),
 	ymax = parseInt(process.argv[5]);
+const computecluster = require('compute-cluster');
 
 var tool = require('../build/3d-tiler.node.js');	
 
-const tmpdir = '/tmp';
-
-
 if (!ymax){
-	throw('coordinates missing');
+	console.warn('coordinates missing');
 }
 
-function step5(){
-	
-}
 function step6(){
-	return tool.scopy({user: 'tilt'});
-}
-
-function done(){
-	console.log('Done!');
+	return ;
 }
 
 
-var promisearr = [];
-var tiles = tool.splitTiles([121000,486600,121470,486800],200);
+var cc = new computecluster({
+  module: './src/worker.js'
+});
 
-tiles.then(function(tiles){
-	return Promise.all(tiles.map(function(tile){
-		const xmin = tile[0];
-		const ymin = tile[1];
-		const xmax = tile[2];
-		const ymax = tile[3];
-		console.log(tile);
-		var sequence = Promise.resolve();
-		sequence.then(d=>{
-			tool.export2obj({xmin: xmin, ymin: ymin, xmax: xmax, ymax: ymax});
-		}).then(d=>{
-			tool.offsetObj({
-				infile: './data/models/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '.obj',
-				outfile: './data/models/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '_offset.obj',
-				offsetx: xmin, 
-				offsety: ymin
-			})
-		}).then(d=>{
-			tool.obj2gltf({
-				infile: './data/models/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '_offset.obj',
-				outfile: './data/models/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '.gltf',
-			});
-		}).then(d=>{
-			tool.glb2b3dm({
-				infile: './data/models/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '.glb',
-				outfile: './data/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '.b3dm',
-			});
-		});
-		return sequence();
-	}))
-	.then(d=>{
-		console.log(tiles);
-		tool.createTileset({
-			tiles: tiles
+
+tool.splitTiles([xmin, ymin, xmax, ymax],500).then(function(tiles){
+	var toRun = tiles.length;
+	console.log('Exporting ' + tiles.length + ' tiles');
+	for (var i = 0; i < tiles.length; i++) {
+		var cfg = {
+			xmin: tiles[i][0],
+			ymin: tiles[i][1],
+			xmax: tiles[i][2],
+			ymax: tiles[i][3]
+		};
+		console.log(cfg);
+		
+		cc.enqueue(cfg, function(err, r) {
+				if (err) console.log("an error occured:", err);
+				else console.log("Done: ", r);
+				if (--toRun === 0) {
+					tool.createTileset({
+						tiles: tiles
+					}).then(d=>{
+						Promise.resolve();
+						//tool.scopy({user: 'tilt'})
+					}).then(d=>{
+						console.log('All done!');
+					}).catch(function(e){
+						console.warn(e);
+					});
+					cc.exit();
+				}
 		});
 	}
-	)
-	//.then(step6)
-	.then(done)
-	.catch(function(e){
-		console.warn(e);
-	});
 });
+
+
+	
+	
+	
