@@ -46,7 +46,7 @@ export default function(config) {
 			
 			fs.writeFile('./data/tileset.json', JSON.stringify(template), function (err) {
 			  if (err) return console.error(err);
-			  resolve();
+			  resolve(tiles);
 			});
 		});
 	});

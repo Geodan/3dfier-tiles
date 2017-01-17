@@ -30,7 +30,7 @@ export default function(config) {
 			fs.write(fd, line + '\n');
 		});
 		lineReader.on('close',function(){
-				resolve({infile: outfile});
+				resolve(outfile);
 		});
 	});
 	

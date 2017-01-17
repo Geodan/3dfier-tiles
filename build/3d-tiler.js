@@ -24,7 +24,7 @@ var splitTiles = function(bbox, tilesize) {
 	var tiles = [];
 	return new Promise(function(resolve, reject){
 		for (let i=0; i<ntilesx; i++){
-			for (let j=0; j<ntilesx; j++){
+			for (let j=0; j<ntilesy; j++){
 				var tile = [
 					bbox[0] + (tilesize * i),
 					bbox[1] + (tilesize * j),
@@ -101,7 +101,7 @@ var offsetObj = function(config) {
 			fs.write(fd, line + '\n');
 		});
 		lineReader.on('close',function(){
-				resolve({infile: outfile});
+				resolve(outfile);
 		});
 	});
 	
@@ -119,7 +119,10 @@ var obj2gltf$1 = function(config) {
 				separate: true,
 				embedImage: false // Don't embed image in the converted glTF
 		};
-		return convert(inObj, outGltf, options);
+		return convert(inObj, outGltf, options).then(d=>{
+			console.log('resolving',outGltf);
+			return outGltf.replace('gltf','glb');
+		});
 };
 
 var glb2b3dm = function(config) {
@@ -206,7 +209,7 @@ var createTileset = function(config) {
 			
 			fs.writeFile('./data/tileset.json', JSON.stringify(template), function (err) {
 			  if (err) return console.error(err);
-			  resolve();
+			  resolve(tiles);
 			});
 		});
 	});

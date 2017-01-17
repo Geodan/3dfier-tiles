@@ -6,7 +6,7 @@ process.on('message', function(m) {
 	var ymin = m.ymin;
 	var xmax = m.xmax;
 	var ymax = m.ymax;
-	console.log('Worker!', xmin, ymin, xmax, ymax);
+	console.log('Worker started for tile: ', xmin, ymin, xmax, ymax);
 	
 	tool.export2obj({xmin: xmin, ymin: ymin, xmax: xmax, ymax: ymax})
 		.then(d=>{
@@ -16,19 +16,19 @@ process.on('message', function(m) {
 				offsetx: xmin, 
 				offsety: ymin
 			})
-		}).then(d=>{
+		}).then(infile=>{
 			return tool.obj2gltf({
-				infile: './data/models/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '_offset.obj',
+				infile: infile,
 				outfile: './data/models/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '.gltf',
 			});
-		}).then(d=>{
+		}).then(infile=>{
+			console.log(infile);
 			return tool.glb2b3dm({
-				infile: './data/models/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '.glb',
+				infile: infile,
 				outfile: './data/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '.b3dm',
 			});
-		}).then(d=>{
+		}).then(infile=>{
+			console.log('Worker completed for tile: '+ infile);
 			process.send('complete');
 		});
-		
-	//process.send('complete');
 });

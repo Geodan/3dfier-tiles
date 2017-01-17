@@ -12,5 +12,8 @@ export default function(config) {
 				separate: true,
 				embedImage: false // Don't embed image in the converted glTF
 		};
-		return convert(inObj, outGltf, options);
+		return convert(inObj, outGltf, options).then(d=>{
+			console.log('resolving',outGltf);
+			return outGltf.replace('gltf','glb');
+		});
 }
