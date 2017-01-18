@@ -27,6 +27,10 @@ let "MINX=$1-50"
 let "MINY=$2-50"
 let "MAXX=$3+50"
 let "MAXY=$4+50"
+if [[ -e $MODELDIR/$TILENAME.obj ]]; then
+	echo "$TILENAME.obj exists, skipping"
+	exit 0
+fi
 
 PDALEXT="PC_Intersects(pa,ST_MakeEnvelope($MINX,$MINY,$MAXX,$MAXY,28992))"
 PDALOUT="$WORKDIR/pointcloud.las"
