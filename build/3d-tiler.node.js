@@ -128,22 +128,19 @@ var obj2gltf$1 = function(config) {
 };
 
 var glb2b3dm = function(config) {
-	return new bluebird.Promise(function(resolve, reject){
-		console.log('Glb2b3dm NEW');
-		var infile = config.infile;
-		var outfile = config.outfile;
-		var fsReadFile = bluebird.Promise.promisify(fsExtra.readFile);
-		var fsWriteFile = bluebird.Promise.promisify(fsExtra.outputFile);
-		
-		function readGlbWriteB3dm(inputPath, outputPath, force) {
-			return fsReadFile(inputPath)
-				.then(function(data) {
-					return fsWriteFile(outputPath, glbToB3dm(data));
-				});
-		}
-		readGlbWriteB3dm(infile, outfile,true);
-		resolve();//TT: this resolve is likely too early
-	});
+	console.log('Glb2b3dm NEW');
+	var infile = config.infile;
+	var outfile = config.outfile;
+	var fsReadFile = bluebird.Promise.promisify(fsExtra.readFile);
+	var fsWriteFile = bluebird.Promise.promisify(fsExtra.outputFile);
+	
+	function readGlbWriteB3dm(inputPath, outputPath, force) {
+		return fsReadFile(inputPath)
+			.then(function(data) {
+				return fsWriteFile(outputPath, glbToB3dm(data));
+			});
+	}
+	return readGlbWriteB3dm(infile, outfile,true);
 };
 
 var scopy = function(config) {
