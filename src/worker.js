@@ -30,5 +30,5 @@ process.on('message', function(m) {
 		}).then(infile=>{
 			console.log('Worker completed for tile: '+ infile);
 			process.send('complete');
-		});
+		}).catch(e=>{console.log(e);});
 });
