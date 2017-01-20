@@ -4,7 +4,7 @@
     "comment": "baa"
   },
   "refine": "add",
-  "geometricError": 120000000,
+  "geometricError": 160,
   "root": {
     "boundingVolume": {
       "comment": "All of NL",
@@ -17,7 +17,7 @@
         300
       ]
     },
-    "geometricError": 1200,
+    "geometricError": 80,
     "children": [
     ]
   }

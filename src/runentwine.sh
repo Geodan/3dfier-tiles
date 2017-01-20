@@ -68,8 +68,8 @@ $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -
 
 echo -n "Running 3dfier..."
 $THREEDFIER $THREEDCONF > $MODELDIR/$TILENAME.obj
-#echo -n "Removing tmp files"
-#rm -r $WORKDIR
+echo -n "Removing tmp files"
+rm -r $WORKDIR
 echo "done"
 
 #EXTENT="121000 486600 122000 487400" # centrum_small.laz 
