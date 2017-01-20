@@ -19,7 +19,13 @@ export default function(config) {
 				var m = Cesium.Transforms.eastNorthUpToFixedFrame(
 					Cesium.Cartesian3.fromDegrees(lowerleft[0],lowerleft[1], 0.0)
 				);
-				
+				var boundingVolume = {
+						region: [
+							Cesium.Math.toRadians(lowerleft[0]),Cesium.Math.toRadians(lowerleft[1]),
+							Cesium.Math.toRadians(upperright[0]),Cesium.Math.toRadians(upperright[1]),
+							0,100
+						]
+					};
 				var child = {
 					transform: [
 						m[0],m[1],m[2],m[3],
@@ -27,20 +33,38 @@ export default function(config) {
 						m[8],m[9],m[10],m[11],
 						m[12],m[13],m[14],m[15]
 					],
-					boundingVolume: {
-						region: [
-							Cesium.Math.toRadians(lowerleft[0]),Cesium.Math.toRadians(lowerleft[1]),
-							Cesium.Math.toRadians(upperright[0]),Cesium.Math.toRadians(upperright[1]),
-							0,100
-						]
-					},
+					boundingVolume: boundingVolume,
 					geometricError: 120,
 					content: {
-					  url: bbox[0]+"-"+bbox[1]+"-"+bbox[2]+"-"+bbox[3]+".b3dm"
+					  url: bbox[0]+"-"+bbox[1]+"-"+bbox[2]+"-"+bbox[3]+".json"
 					},
 					children: []
 				};
 				template.root.children.push(child);
+				
+				var json = {
+				  asset: {
+					version: "0.0"
+				  },
+				  geometricError: 0.0,
+				  root: {
+					boundingVolume: boundingVolume,
+					geometricError: 20.0,
+					refine: "add",
+					children: [{
+						boundingVolume:boundingVolume,
+					    geometricError: 10.0,
+						refine: "replace",
+						content: {
+						  url: bbox[0]+"-"+bbox[1]+"-"+bbox[2]+"-"+bbox[3]+".b3dm"
+						}
+					}]
+				  }
+				};
+				
+				fs.writeFileSync("./data/"+bbox[0]+"-"+bbox[1]+"-"+bbox[2]+"-"+bbox[3]+".json", JSON.stringify(json));
+				
+				
 			});                               
 			
 			
