@@ -13,7 +13,8 @@ if (!ymax){
 }
 
 var cc = new computecluster({
-  module: './src/worker.js'
+  module: './src/worker.js',
+  max_processes: 4
 });
 
 

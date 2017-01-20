@@ -1,12 +1,11 @@
 Geodan 2017
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('fs'), require('child_process'), require('bluebird'), require('readline'), require('obj2gltf'), require('3d-tiles-tools/lib/glbToB3dm'), require('fs-extra'), require('readline-sync'), require('scp2'), require('cesium'), require('proj4')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'fs', 'child_process', 'bluebird', 'readline', 'obj2gltf', '3d-tiles-tools/lib/glbToB3dm', 'fs-extra', 'readline-sync', 'scp2', 'cesium', 'proj4'], factory) :
-	(factory((global.tiler = global.tiler || {}),global.fs,global.child_process,global.bluebird,global.readline,global.obj2gltf,global.glbToB3dm,global.fsExtra,global.readlineSync,global.client,global.Cesium,global.proj4));
-}(this, (function (exports,fs,child_process,bluebird,readline,obj2gltf,glbToB3dm,fsExtra,readlineSync,client,Cesium,proj4) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('fs'), require('child_process'), require('bluebird'), require('obj2gltf'), require('3d-tiles-tools/lib/glbToB3dm'), require('fs-extra'), require('readline-sync'), require('scp2'), require('cesium'), require('proj4')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'fs', 'child_process', 'bluebird', 'obj2gltf', '3d-tiles-tools/lib/glbToB3dm', 'fs-extra', 'readline-sync', 'scp2', 'cesium', 'proj4'], factory) :
+	(factory((global.tiler = global.tiler || {}),global.fs,global.child_process,global.bluebird,global.obj2gltf,global.glbToB3dm,global.fsExtra,global.readlineSync,global.client,global.Cesium,global.proj4));
+}(this, (function (exports,fs,child_process,bluebird,obj2gltf,glbToB3dm,fsExtra,readlineSync,client,Cesium,proj4) { 'use strict';
 
 fs = 'default' in fs ? fs['default'] : fs;
-readline = 'default' in readline ? readline['default'] : readline;
 glbToB3dm = 'default' in glbToB3dm ? glbToB3dm['default'] : glbToB3dm;
 fsExtra = 'default' in fsExtra ? fsExtra['default'] : fsExtra;
 readlineSync = 'default' in readlineSync ? readlineSync['default'] : readlineSync;
@@ -81,30 +80,25 @@ var offsetObj = function(config) {
 	
 	return new bluebird.Promise(function(resolve, reject){
 		console.log('Setting offset');
-		var lineReader = readline.createInterface({
-		  input: fs.createReadStream(infile),
-		  output: process.stdout,
-		  terminal: false
-		});
-		
 		var fd = fs.openSync(outfile, 'w');
-		lineReader.on('line', function (line) {
+		
+		var array = fs.readFileSync(infile).toString().split("\n");
+		var i;
+		for(i in array) {
+			var line = array[i];
+			//console.log(array[i]);
 			if (line[0] == 'v'){
 				var arr = line.split(' ');
-				arr[1] = parseFloat(arr[1] - offsetx).toFixed(3);
-				arr[2] = parseFloat(arr[2] - offsety).toFixed(3);
-				if (arr[1] == 0) {arr[1] = 0.1;}
-				if (arr[2] == 0) {arr[2] = 0.1;}
-				if (arr[3] == 0) {arr[3] = 0.1;}
+				arr[1] = (parseFloat(arr[1]) - offsetx).toFixed(3);
+				arr[2] = (parseFloat(arr[2]) - offsety).toFixed(3);
 				line = arr[0] + ' ' + arr[1] + ' ' + arr[3] + ' ' + arr[2]*-1;
 			}
-			fs.write(fd, line + '\n');
-		});
-		lineReader.on('close',function(){
-				resolve(outfile);
-		});
+			fs.writeSync(fd, line + '\n');
+		}
+		fs.closeSync(fd);
+		console.log('Done offsetting ', infile);
+		resolve(outfile);
 	});
-	
 };
 
 var obj2gltf$1 = function(config) {
