@@ -34,6 +34,6 @@ process.on('message', function(m) {
 			process.send('complete');
 		}).catch(e=>{
 			process.send('complete');
-			console.log(e)
+			console.log('Problem with',xmin, ymin, xmax, ymax, e)
 		;});
 });
