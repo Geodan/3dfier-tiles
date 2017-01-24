@@ -15,7 +15,7 @@ if ! [[ $EXTENT =~ ^[0-9]+[[:space:]][0-9]+[[:space:]][0-9]+[[:space:]][0-9]+$ ]
 	exit 1
 fi
 TILENAME="$1-$2-$3-$4"
-WORKDIR="/tmp/$TILENAME"
+WORKDIR="/var/data/tmp/rubiov/3dtiles/$TILENAME"
 if ! [[ -e $WORKDIR ]]; then
 	mkdir -p $WORKDIR
 fi
@@ -32,11 +32,17 @@ if [[ -e $MODELDIR/$TILENAME.obj ]]; then
 	exit 0
 fi
 
-PDALEXT="PC_Intersects(pa,ST_MakeEnvelope($MINX,$MINY,$MAXX,$MAXY,28992))"
-PDALOUT="$WORKDIR/pointcloud.las"
-echo -n "Extracting pointcloud..."
-$PDAL pipeline --readers.pgpointcloud.where="$PDALEXT" --writers.las.filename="$PDALOUT" $PDALOPT
-#echo "done"
+if [[ -e $WORKDIR/pointcloud.las ]]; then
+	echo "$WORKDIR/pointcloud.las exists, skipping"
+else 
+	PDALEXT="PC_Intersects(pa,ST_MakeEnvelope($MINX,$MINY,$MAXX,$MAXY,28992))"
+	PDALOUT="$WORKDIR/pointcloud.las"
+	echo -n "Extracting pointcloud..."
+	PDALOUTPUT=`$PDAL pipeline --readers.pgpointcloud.where="$PDALEXT" --writers.las.filename="$PDALOUT" $PDALOPT`
+	echo "PDAL output:"
+	echo $PDALOUTPUT
+	#echo "done"
+fi
 
 cd $WORKDIR
 
