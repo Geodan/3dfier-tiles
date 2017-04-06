@@ -18,8 +18,8 @@ input_polygons:
     height_field: relatievehoogteligging
   - datasets: 
       - bgt_pand.sqlite
-      - bgt_overigbouwwerk.sqlite
-    uniqueid: lokaalid
+      #- bgt_overigbouwwerk.sqlite
+    uniqueid: lokaalid #gebwbagid #lokaalid
     lifting: Building
     height_field: relatievehoogteligging
   - datasets: 
@@ -73,7 +73,7 @@ input_elevation:
 options:
   building_radius_vertex_elevation: 3.0
   radius_vertex_elevation: 1.0
-  threshold_jump_edges: 0.5
+  threshold_jump_edges: 100.5
 
 output: 
   format: OBJ 

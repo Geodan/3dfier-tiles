@@ -3,13 +3,15 @@
 		{
 			"type":"readers.pgpointcloud",
 			"connection":"dbname='research' user='postgres'",
-			"schema":"ahn3_pointcloud",
-			"table":"vw_ahn3",
+			//"schema":"ahn3_pointcloud",
+			//"table":"vw_ahn3",
+			"schema":"adam_pointcloud",
+			"table":"patches",
 			"column":"pa",
 			"spatialreference":"EPSG:28992"
-		},
-		{
-			"type":"writers.las"
+		},{
+			"type":"writers.las",
+			"a_srs":"EPSG:28992"
 		}
 	]
 }

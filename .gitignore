@@ -2,3 +2,5 @@ output
 data
 node_modules
 *.*~
+*.tar.gz
+tmp

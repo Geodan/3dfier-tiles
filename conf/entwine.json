@@ -1,0 +1,13 @@
+{
+    "absolute": true,
+    "reproject": {
+        "out": "EPSG:4978"
+    },
+    "formats": {
+        "cesium": {
+            "tilesetSplit": 8,
+            "geometricErrorDivisor": 16.0
+        }
+    }
+}
+

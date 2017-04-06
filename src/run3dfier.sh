@@ -15,7 +15,7 @@ if ! [[ $EXTENT =~ ^[0-9]+[[:space:]][0-9]+[[:space:]][0-9]+[[:space:]][0-9]+$ ]
 	exit 1
 fi
 TILENAME="$1-$2-$3-$4"
-WORKDIR="/var/data/tmp/rubiov/3dtiles/$TILENAME"
+WORKDIR="/var/data/tmp/tomt/3dtiles/$TILENAME"
 if ! [[ -e $WORKDIR ]]; then
 	mkdir -p $WORKDIR
 fi
@@ -27,7 +27,7 @@ let "MINX=$1-50"
 let "MINY=$2-50"
 let "MAXX=$3+50"
 let "MAXY=$4+50"
-if [[ -e $MODELDIR/$TILENAME.obj ]]; then
+if [[ -e $MODELDIR/$TILENAME.objx ]]; then
 	echo "$TILENAME.obj exists, skipping"
 	exit 0
 fi
@@ -48,6 +48,7 @@ cd $WORKDIR
 
 EXTENTBUF="$MINX $MINY $MAXX $MAXY"
 echo -n "Writing BGT files..."
+#$OGR2OGR -nlt CONVERT_TO_LINEAR -spat $EXTENT -f sqlite bgt_pand.sqlite PG:"${PGPARAM}" bgt.buildings_geknipt
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -f sqlite bgt_pand.sqlite PG:"${PGPARAM}" bgt.pand_2d
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -f sqlite bgt_overigbouwwerk.sqlite PG:"${PGPARAM}" bgt.overigbouwwerk_2d
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
