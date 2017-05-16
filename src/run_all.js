@@ -25,27 +25,30 @@ tool.splitTiles([xmin, ymin, xmax, ymax],tilesize)
 			tiles: tiles
 		})
 	}).then(tiles=>{
-	var toRun = tiles.length;
-	console.log('Exporting ' + tiles.length + ' tiles');
-	
-	for (var i = 0; i < tiles.length; i++) {
-		var cfg = {
-			xmin: tiles[i][0],
-			ymin: tiles[i][1],
-			xmax: tiles[i][2],
-			ymax: tiles[i][3]
-		};
+		var toRun = tiles.length;
+		console.log('Exporting ' + tiles.length + ' tiles');
 		
-		cc.enqueue(cfg, function(err, r) {
-			if (err) console.log("an error occured:", err);
-			else console.log("Done: ", r);
-			if (--toRun === 0) {
-				console.log('All done!');
-				cc.exit();
-			}
-		});
-	}
-});
+		for (var i = 0; i < tiles.length; i++) {
+			var cfg = {
+				xmin: tiles[i][0],
+				ymin: tiles[i][1],
+				xmax: tiles[i][2],
+				ymax: tiles[i][3]
+			};
+			
+			cc.enqueue(cfg, function(err, r) {
+				if (err) console.log("an error occured:", err);
+				else console.log("Done: ", r);
+				if (--toRun === 0) {
+					console.log('All done!');
+					cc.exit();
+				}
+			});
+		}
+	})
+	.catch(e=>{
+			console.warn(e);
+	});
 
 
 	

@@ -25,6 +25,7 @@
   "homepage": "https://github.com/Geodan/3dfier-tiles#readme",
   "dependencies": {
     "3d-tiles-tools": "^0.1.0",
+    "cesium": "^1.33.0",
     "compute-cluster": "0.0.9",
     "obj2gltf": "^0.1.7",
     "proj4": "^2.3.15",
