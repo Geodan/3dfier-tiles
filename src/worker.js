@@ -20,12 +20,11 @@ process.on('message', function(m) {
 		}).then(infile=>{
 			return tool.obj2gltf({
 				infile: infile,
-				outfile: './data/models/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '.gltf',
+				outfile: './data/models/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '.glb',
 			});
 		}).catch(e=>{
 			console.warn(e);
 		}).then(infile=>{
-			console.log(infile);
 			return tool.glb2b3dm({
 				infile: infile,
 				outfile: './data/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '.b3dm',

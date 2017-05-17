@@ -4,7 +4,7 @@ import fsExtra from 'fs-extra';
 import fs from 'fs';
 
 export default function(config) {
-	console.log('Glb2b3dm NEW');
+	console.log('Glb2b3dm');
 	var infile = config.infile;
 	var outfile = config.outfile;
 	var fsReadFile = Promise.promisify(fsExtra.readFile);

@@ -103,24 +103,24 @@ var offsetObj = function(config) {
 
 var obj2gltf$1 = function(config) {
 		var inObj = config.infile;
-		console.log('Obj2gltf NEW');
+		console.log('Obj2gltf');
 		var obj2gltf$$1 = require('obj2gltf');
-		var convert = obj2gltf$$1.convert;
 		var outGltf = config.outfile;
 		var options = {
 				binary: true,
 				optimizeForCesium: true,
-				separate: true,
 				embedImage: false // Don't embed image in the converted glTF
 		};
-		return convert(inObj, outGltf, options).then(d=>{
-			console.log('resolving',outGltf);
-			return outGltf.replace('gltf','glb');
+		
+		return obj2gltf$$1(inObj, outGltf, options).then(d=>{
+			return outGltf;
+		}).catch(e=>{
+			console.error('Error',e);
 		});
 };
 
 var glb2b3dm = function(config) {
-	console.log('Glb2b3dm NEW');
+	console.log('Glb2b3dm');
 	var infile = config.infile;
 	var outfile = config.outfile;
 	var fsReadFile = bluebird.Promise.promisify(fsExtra.readFile);

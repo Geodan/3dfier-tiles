@@ -14,7 +14,8 @@ if (!ymax){
 
 var cc = new computecluster({
   module: './src/worker.js',
-  max_processes: 4
+  max_processes: 4,
+  max_backlog: -1
 });
 
 
