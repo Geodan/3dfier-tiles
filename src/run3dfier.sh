@@ -6,7 +6,7 @@ MODELDIR="$BASEDIR/data/models"
 OGR2OGR="/usr/local/bin/ogr2ogr"
 PDAL="/usr/local/bin/pdal"
 PDALOPT="$BASEDIR/conf/pdal_options.json"
-THREEDFIER="/home/tomt/src/3dfier-master/build/3dfier"
+THREEDFIER="/usr/local/bin/3dfier"
 THREEDCONF="$BASEDIR/conf/3dfier.yml"
 
 EXTENT="$1 $2 $3 $4"
@@ -74,7 +74,7 @@ $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -
 #echo "done"
 
 echo -n "Running 3dfier..."
-$THREEDFIER $THREEDCONF > $MODELDIR/$TILENAME.obj
+$THREEDFIER $THREEDCONF -o $MODELDIR/$TILENAME.obj
 #echo -n "Removing tmp files"
 #rm -r $WORKDIR
 echo "done"

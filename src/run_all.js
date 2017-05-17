@@ -27,7 +27,7 @@ tool.splitTiles([xmin, ymin, xmax, ymax],tilesize)
 	}).then(tiles=>{
 		var toRun = tiles.length;
 		console.log('Exporting ' + tiles.length + ' tiles');
-		
+		//TODO: make sure that only so many processes at once are running
 		for (var i = 0; i < tiles.length; i++) {
 			var cfg = {
 				xmin: tiles[i][0],
