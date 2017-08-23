@@ -26,9 +26,10 @@ tool.splitTiles([xmin, ymin, xmax, ymax],tilesize)
 			tiles: tiles
 		})
 	}).then(tiles=>{
+		//return null; //FIXME
 		var toRun = tiles.length;
 		console.log('Exporting ' + tiles.length + ' tiles');
-		//TODO: make sure that only so many processes at once are running
+		
 		for (var i = 0; i < tiles.length; i++) {
 			var cfg = {
 				xmin: tiles[i][0],
@@ -39,7 +40,8 @@ tool.splitTiles([xmin, ymin, xmax, ymax],tilesize)
 			
 			cc.enqueue(cfg, function(err, r) {
 				if (err) console.log("an error occured:", err);
-				else console.log("Done: ", r);
+				else console.log("tile ", r);
+				console.log(toRun+' to go...');
 				if (--toRun === 0) {
 					console.log('All done!');
 					cc.exit();

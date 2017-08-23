@@ -17,7 +17,8 @@ process.on('message', function(m) {
 				offsetx: xmin, 
 				offsety: ymin
 			})
-		}).then(infile=>{
+		})
+		.then(infile=>{
 			return tool.obj2gltf({
 				infile: infile,
 				outfile: './data/models/' + xmin + '-' + ymin + '-' + xmax + '-' + ymax + '.glb',
