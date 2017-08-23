@@ -2,7 +2,7 @@
 	"pipeline":[
 		{
 			"type":"readers.pgpointcloud",
-			"connection":"dbname='research' user='postgres'",
+			"connection":"port=5433 dbname='research' user='postgres'",
 			"schema":"ahn3_pointcloud",
 			"table":"vw_ahn3",
 			"column":"pa",

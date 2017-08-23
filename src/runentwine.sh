@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PGPARAM="dbname=research user=postgres password="
+PGPARAM="port=5433 dbname=research user=postgres password="
 BASEDIR="/var/data/git_repos/3dfier-tiles/"
 PDAL="/usr/local/bin/pdal"
 PDALOPT="$BASEDIR/conf/pdal_options.json"

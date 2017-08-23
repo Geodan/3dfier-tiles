@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PGPARAM="dbname=research user=postgres password="
+PGPARAM="dbname=research user=postgres port=5433 password="
 BASEDIR="/var/data/git_repos/3dfier-tiles/"
 MODELDIR="$BASEDIR/data/models"
 OGR2OGR="/usr/local/bin/ogr2ogr"
@@ -38,7 +38,7 @@ else
 	PDALEXT="PC_Intersects(pa,ST_MakeEnvelope($MINX,$MINY,$MAXX,$MAXY,28992))"
 	PDALOUT="$WORKDIR/pointcloud.las"
 	echo -n "Extracting pointcloud..."
-	PDALOUTPUT=`$PDAL pipeline --readers.pgpointcloud.where="$PDALEXT" --writers.las.filename="$PDALOUT" $PDALOPT`
+	$PDAL pipeline --readers.pgpointcloud.where="$PDALEXT" --writers.las.filename="$PDALOUT" $PDALOPT
 	echo "PDAL output:"
 	echo $PDALOUTPUT
 	#echo "done"
@@ -49,28 +49,28 @@ cd $WORKDIR
 EXTENTBUF="$MINX $MINY $MAXX $MAXY"
 echo -n "Writing BGT files..."
 #$OGR2OGR -nlt CONVERT_TO_LINEAR -spat $EXTENT -f sqlite bgt_pand.sqlite PG:"${PGPARAM}" bgt.buildings_geknipt
-$OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -f sqlite bgt_pand.sqlite PG:"${PGPARAM}" bgt.pand_2d
-$OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -f sqlite bgt_overigbouwwerk.sqlite PG:"${PGPARAM}" bgt.overigbouwwerk_2d
+$OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -f sqlite bgt_pand.sqlite PG:"${PGPARAM}" bgt.pand_2dactueelbestaand
+$OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -f sqlite bgt_overigbouwwerk.sqlite PG:"${PGPARAM}" bgt.overigbouwwerk_2dactueelbestaand
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
-	-f sqlite bgt_ondersteunendwegdeel.sqlite PG:"${PGPARAM}" bgt.ondersteunendwegdeel_2d
+	-f sqlite bgt_ondersteunendwegdeel.sqlite PG:"${PGPARAM}" bgt.ondersteunendwegdeel_2dactueelbestaand
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
-	-f sqlite bgt_overbruggingsdeel.sqlite PG:"${PGPARAM}" bgt.overbruggingsdeel_2d
+	-f sqlite bgt_overbruggingsdeel.sqlite PG:"${PGPARAM}" bgt.overbruggingsdeel_2dactueelbestaand
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
-	-f sqlite bgt_onbegroeidterreindeel.sqlite PG:"${PGPARAM}" bgt.onbegroeidterreindeel_2d
+	-f sqlite bgt_onbegroeidterreindeel.sqlite PG:"${PGPARAM}" bgt.onbegroeidterreindeel_2dactueelbestaand
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
-	-f sqlite bgt_ondersteunendwaterdeel.sqlite PG:"${PGPARAM}" bgt.ondersteunendwaterdeel_2d
+	-f sqlite bgt_ondersteunendwaterdeel.sqlite PG:"${PGPARAM}" bgt.ondersteunendwaterdeel_2dactueelbestaand 
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
-	-f sqlite bgt_begroeidterreindeel.sqlite PG:"${PGPARAM}" bgt.begroeidterreindeel_2d
+	-f sqlite bgt_begroeidterreindeel.sqlite PG:"${PGPARAM}" bgt.begroeidterreindeel_2dactueelbestaand
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
-	-f sqlite bgt_scheiding.sqlite PG:"${PGPARAM}" bgt.scheiding_2d
+	-f sqlite bgt_scheiding.sqlite PG:"${PGPARAM}" bgt.scheiding_2dactueelbestaand
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
-	-f sqlite bgt_wegdeel.sqlite PG:"${PGPARAM}" bgt.wegdeel_2d
+	-f sqlite bgt_wegdeel.sqlite PG:"${PGPARAM}" bgt.wegdeel_2dactueelbestaand
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
-	-f sqlite bgt_waterdeel.sqlite PG:"${PGPARAM}" bgt.waterdeel_2d
+	-f sqlite bgt_waterdeel.sqlite PG:"${PGPARAM}" bgt.waterdeel_2dactueelbestaand
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
-	-f sqlite bgt_tunneldeel.sqlite PG:"${PGPARAM}" bgt.tunneldeel_2d
+	-f sqlite bgt_tunneldeel.sqlite PG:"${PGPARAM}" bgt.tunneldeel_2dactueelbestaand
 $OGR2OGR -nlt CONVERT_TO_LINEAR -where "eindregistratie is NULL" -spat $EXTENT -clipdst $EXTENTBUF \
-	-f sqlite bgt_kunstwerkdeel.sqlite PG:"${PGPARAM}" bgt.kunstwerkdeel_2d
+	-f sqlite bgt_kunstwerkdeel.sqlite PG:"${PGPARAM}" bgt.kunstwerkdeel_2dactueelbestaand
 #echo "done"
 
 echo -n "Running 3dfier..."
